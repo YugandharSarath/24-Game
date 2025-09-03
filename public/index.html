@@ -1,678 +1,701 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>24 Game</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>24 Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .app {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      padding: 30px;
-      max-width: 1000px;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 30px;
-      min-height: 600px;
-    }
-
-    header {
-      grid-column: 1 / -1;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .title {
-      font-size: 2.5rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 10px;
-    }
-
-    .title small {
-      display: block;
-      font-size: 1rem;
-      font-weight: 400;
-      color: #666;
-      margin-top: 10px;
-    }
-
-    .panel {
-      background: white;
-      border-radius: 15px;
-      padding: 25px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-
-    .card {
-      aspect-ratio: 1;
-      border: 3px solid #e0e7ff;
-      background: linear-gradient(135deg, #f8faff 0%, #e0e7ff 100%);
-      border-radius: 12px;
-      font-size: 2rem;
-      font-weight: 700;
-      color: #4f46e5;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 80px;
-    }
-
-    .card:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
-      border-color: #4f46e5;
-    }
-
-    .card:active:not(:disabled) {
-      transform: translateY(0);
-    }
-
-    .card:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .expr {
-      background: #f8faff;
-      border: 2px solid #e0e7ff;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 20px;
-      font-family: 'Monaco', 'Menlo', monospace;
-    }
-
-    #expression {
-      font-size: 1.2rem;
-      color: #1e293b;
-      min-height: 1.5em;
-      display: inline-block;
-    }
-
-    .result {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #059669;
-      margin-left: 10px;
-    }
-
-    .bar {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .bar button {
-      padding: 12px;
-      border: 2px solid #e5e7eb;
-      background: white;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      color: #374151;
-    }
-
-    .bar button:hover {
-      border-color: #4f46e5;
-      color: #4f46e5;
-      transform: translateY(-1px);
-    }
-
-    .bar button:active {
-      transform: translateY(0);
-    }
-
-    #btn-check {
-      background: #10b981;
-      color: white;
-      border-color: #10b981;
-    }
-
-    #btn-check:hover {
-      background: #059669;
-      border-color: #059669;
-      color: white;
-    }
-
-    #btn-clear, #btn-undo {
-      background: #f59e0b;
-      color: white;
-      border-color: #f59e0b;
-    }
-
-    #btn-clear:hover, #btn-undo:hover {
-      background: #d97706;
-      border-color: #d97706;
-      color: white;
-    }
-
-    #btn-new, #btn-shuffle {
-      background: #3b82f6;
-      color: white;
-      border-color: #3b82f6;
-    }
-
-    #btn-new:hover, #btn-shuffle:hover {
-      background: #2563eb;
-      border-color: #2563eb;
-      color: white;
-    }
-
-    #btn-giveup {
-      background: #ef4444;
-      color: white;
-      border-color: #ef4444;
-    }
-
-    #btn-giveup:hover {
-      background: #dc2626;
-      border-color: #dc2626;
-      color: white;
-    }
-
-    .side {
-      grid-column: 2;
-    }
-
-    .history h4 {
-      font-size: 1.2rem;
-      color: #374151;
-      margin-bottom: 15px;
-      font-weight: 600;
-    }
-
-    #history {
-      list-style: none;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    #history li {
-      background: #f8faff;
-      padding: 10px;
-      margin-bottom: 8px;
-      border-radius: 6px;
-      font-family: 'Monaco', 'Menlo', monospace;
-      font-size: 0.9rem;
-      border-left: 4px solid #e0e7ff;
-    }
-
-    #history li:last-child {
-      border-left-color: #4f46e5;
-      background: #eef2ff;
-    }
-
-    .success {
-      color: #059669 !important;
-      border-left-color: #10b981 !important;
-      background: #ecfdf5 !important;
-    }
-
-    .error {
-      color: #dc2626 !important;
-      border-left-color: #ef4444 !important;
-      background: #fef2f2 !important;
-    }
-
-    @media (max-width: 768px) {
-      .app {
-        grid-template-columns: 1fr;
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         padding: 20px;
-        gap: 20px;
+      }
+
+      .app {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        max-width: 1000px;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+        min-height: 600px;
+      }
+
+      header {
+        grid-column: 1 / -1;
+        text-align: center;
+        margin-bottom: 20px;
       }
 
       .title {
-        font-size: 2rem;
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+      }
+
+      .title small {
+        display: block;
+        font-size: 1rem;
+        font-weight: 400;
+        color: #666;
+        margin-top: 10px;
+      }
+
+      .panel {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
       }
 
       .cards {
-        justify-content: center;
-        gap: 10px;
-        margin: 0 auto 20px auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
       }
 
       .card {
-        width: 70px;
-        height: 70px;
-        font-size: 1.5rem;
+        aspect-ratio: 1;
+        border: 3px solid #e0e7ff;
+        background: linear-gradient(135deg, #f8faff 0%, #e0e7ff 100%);
+        border-radius: 12px;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #4f46e5;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 80px;
+      }
+
+      .card:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+        border-color: #4f46e5;
+      }
+
+      .card:active:not(:disabled) {
+        transform: translateY(0);
+      }
+
+      .card:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .expr {
+        background: #f8faff;
+        border: 2px solid #e0e7ff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        font-family: "Monaco", "Menlo", monospace;
+      }
+
+      #expression {
+        font-size: 1.2rem;
+        color: #1e293b;
+        min-height: 1.5em;
+        display: inline-block;
+      }
+
+      .result {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #059669;
+        margin-left: 10px;
       }
 
       .bar {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
       }
 
       .bar button {
-        padding: 10px 8px;
-        font-size: 0.9rem;
+        padding: 12px;
+        border: 2px solid #e5e7eb;
+        background: white;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #374151;
       }
-    }
 
-    @keyframes celebrate {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
+      .bar button:hover {
+        border-color: #4f46e5;
+        color: #4f46e5;
+        transform: translateY(-1px);
+      }
 
-    .celebrate {
-      animation: celebrate 0.5s ease-in-out;
-    }
-  </style>
-</head>
-<body>
-  <main class="app" role="application" aria-label="24 Game" data-testid="game-container">
-    <header>
-      <div class="title" aria-live="polite" data-testid="game-title">
-        24 Game
-        <small>Use all 4 numbers exactly once to make 24</small>
-      </div>
-    </header>
+      .bar button:active {
+        transform: translateY(0);
+      }
 
-    <div class="main-game">
-      <section class="panel">
-        <div class="cards" id="cards" data-testid="cards-container"></div>
+      #btn-check {
+        background: #10b981;
+        color: white;
+        border-color: #10b981;
+      }
 
-        <div class="expr">
-          <span id="expression" data-testid="expression-display">
-            Start building an expression...
-          </span>
-          <span class="result" id="result" data-testid="result">= ?</span>
-        </div>
+      #btn-check:hover {
+        background: #059669;
+        border-color: #059669;
+        color: white;
+      }
 
-        <div class="bar">
-          <button id="btn-add" data-testid="btn-add">+</button>
-          <button id="btn-sub" data-testid="btn-sub">−</button>
-          <button id="btn-mul" data-testid="btn-mul">×</button>
-          <button id="btn-div" data-testid="btn-div">÷</button>
-          <button id="btn-lp" data-testid="btn-lp">(</button>
-          <button id="btn-rp" data-testid="btn-rp">)</button>
-          <button id="btn-undo" data-testid="btn-undo">Undo</button>
-          <button id="btn-clear" data-testid="btn-clear">Clear</button>
-          <button id="btn-check" data-testid="btn-check">Check</button>
-          <button id="btn-new" data-testid="btn-new">New</button>
-          <button id="btn-shuffle" data-testid="btn-shuffle">Shuffle</button>
-          <button id="btn-giveup" data-testid="btn-giveup">Give Up</button>
-        </div>
-      </section>
+      #btn-clear,
+      #btn-undo {
+        background: #f59e0b;
+        color: white;
+        border-color: #f59e0b;
+      }
 
-      <section class="panel side">
-        <div class="history">
-          <h4>Move History</h4>
-          <ul id="history" data-testid="history-container"></ul>
-        </div>
-      </section>
-    </div>
-  </main>
+      #btn-clear:hover,
+      #btn-undo:hover {
+        background: #d97706;
+        border-color: #d97706;
+        color: white;
+      }
 
-  <script>
-    let currentCards = [];
-    let usedCardIndices = new Set();
-    let expression = "";
+      #btn-new,
+      #btn-shuffle {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+      }
 
-    let cardsEl;
-    let exprEl;
-    let resultEl;
-    let historyEl;
+      #btn-new:hover,
+      #btn-shuffle:hover {
+        background: #2563eb;
+        border-color: #2563eb;
+        color: white;
+      }
 
-    function judgePoint24(cards) {
-      const EPSILON = 1e-6;
-      const TARGET = 24;
+      #btn-giveup {
+        background: #ef4444;
+        color: white;
+        border-color: #ef4444;
+      }
 
-      function dfs(nums) {
-        if (nums.length === 1) {
-          return Math.abs(nums[0] - TARGET) < EPSILON;
+      #btn-giveup:hover {
+        background: #dc2626;
+        border-color: #dc2626;
+        color: white;
+      }
+
+      .side {
+        grid-column: 2;
+      }
+
+      .history h4 {
+        font-size: 1.2rem;
+        color: #374151;
+        margin-bottom: 15px;
+        font-weight: 600;
+      }
+
+      #history {
+        list-style: none;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      #history li {
+        background: #f8faff;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        font-family: "Monaco", "Menlo", monospace;
+        font-size: 0.9rem;
+        border-left: 4px solid #e0e7ff;
+      }
+
+      #history li:last-child {
+        border-left-color: #4f46e5;
+        background: #eef2ff;
+      }
+
+      .success {
+        color: #059669 !important;
+        border-left-color: #10b981 !important;
+        background: #ecfdf5 !important;
+      }
+
+      .error {
+        color: #dc2626 !important;
+        border-left-color: #ef4444 !important;
+        background: #fef2f2 !important;
+      }
+
+      @media (max-width: 768px) {
+        .app {
+          grid-template-columns: 1fr;
+          padding: 20px;
+          gap: 20px;
         }
 
-        const n = nums.length;
-        for (let i = 0; i < n; i++) {
-          for (let j = i + 1; j < n; j++) {
-            const a = nums[i];
-            const b = nums[j];
-            const rest = nums.filter((_, idx) => idx !== i && idx !== j);
+        .title {
+          font-size: 2rem;
+        }
 
-            const operations = [
-              a + b,    
-              a - b,    
-              b - a,    
-              a * b     
-            ];
+        .cards {
+          justify-content: center;
+          gap: 10px;
+          margin: 0 auto 20px auto;
+        }
 
-            if (Math.abs(b) > EPSILON) operations.push(a / b);
-            if (Math.abs(a) > EPSILON) operations.push(b / a);
+        .card {
+          width: 70px;
+          height: 70px;
+          font-size: 1.5rem;
+        }
 
-            for (const val of operations) {
-              if (dfs([...rest, val])) return true;
+        .bar {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+        }
+
+        .bar button {
+          padding: 10px 8px;
+          font-size: 0.9rem;
+        }
+      }
+
+      @keyframes celebrate {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      .celebrate {
+        animation: celebrate 0.5s ease-in-out;
+      }
+    </style>
+  </head>
+  <body>
+    <main
+      class="app"
+      role="application"
+      aria-label="24 Game"
+      data-testid="game-container"
+    >
+      <header>
+        <div class="title" aria-live="polite" data-testid="game-title">
+          24 Game
+          <small>Use all 4 numbers exactly once to make 24</small>
+        </div>
+      </header>
+
+      <div class="main-game">
+        <section class="panel">
+          <div class="cards" id="cards" data-testid="cards-container"></div>
+
+          <div class="expr">
+            <span id="expression" data-testid="expression-display">
+              Start building an expression...
+            </span>
+            <span class="result" id="result" data-testid="result">= ?</span>
+          </div>
+
+          <div class="bar">
+            <button id="btn-add" data-testid="btn-add">+</button>
+            <button id="btn-sub" data-testid="btn-sub">−</button>
+            <button id="btn-mul" data-testid="btn-mul">×</button>
+            <button id="btn-div" data-testid="btn-div">÷</button>
+            <button id="btn-lp" data-testid="btn-lp">(</button>
+            <button id="btn-rp" data-testid="btn-rp">)</button>
+            <button id="btn-undo" data-testid="btn-undo">Undo</button>
+            <button id="btn-clear" data-testid="btn-clear">Clear</button>
+            <button id="btn-check" data-testid="btn-check">Check</button>
+            <button id="btn-new" data-testid="btn-new">New</button>
+            <button id="btn-shuffle" data-testid="btn-shuffle">Shuffle</button>
+            <button id="btn-giveup" data-testid="btn-giveup">Give Up</button>
+          </div>
+        </section>
+
+        <section class="panel side">
+          <div class="history">
+            <h4>Move History</h4>
+            <ul id="history" data-testid="history-container"></ul>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      let currentCards = [];
+      let usedCardIndices = new Set();
+      let expression = "";
+
+      let cardsEl;
+      let exprEl;
+      let resultEl;
+      let historyEl;
+
+      function judgePoint24(cards) {
+        const EPSILON = 1e-6;
+        const TARGET = 24;
+
+        function dfs(nums) {
+          if (nums.length === 1) {
+            return Math.abs(nums[0] - TARGET) < EPSILON;
+          }
+
+          const n = nums.length;
+          for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+              const a = nums[i];
+              const b = nums[j];
+              const rest = nums.filter((_, idx) => idx !== i && idx !== j);
+
+              const operations = [a + b, a - b, b - a, a * b];
+
+              if (Math.abs(b) > EPSILON) operations.push(a / b);
+              if (Math.abs(a) > EPSILON) operations.push(b / a);
+
+              for (const val of operations) {
+                if (dfs([...rest, val])) return true;
+              }
             }
           }
+          return false;
         }
-        return false;
+
+        return dfs(cards.map(Number));
       }
 
-      return dfs(cards.map(Number));
-    }
+      function findSolution(cards) {
+        const EPSILON = 1e-6;
+        const TARGET = 24;
 
-    function findSolution(cards) {
-      const EPSILON = 1e-6;
-      const TARGET = 24;
+        function dfsWithPath(nums, path) {
+          if (nums.length === 1) {
+            if (Math.abs(nums[0] - TARGET) < EPSILON) {
+              return path;
+            }
+            return null;
+          }
 
-      function dfsWithPath(nums, path) {
-        if (nums.length === 1) {
-          if (Math.abs(nums[0] - TARGET) < EPSILON) {
-            return path;
+          const n = nums.length;
+          for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+              const a = nums[i];
+              const b = nums[j];
+              const rest = nums.filter((_, idx) => idx !== i && idx !== j);
+
+              const operations = [
+                { val: a + b, expr: `(${a} + ${b})` },
+                { val: a - b, expr: `(${a} - ${b})` },
+                { val: b - a, expr: `(${b} - ${a})` },
+                { val: a * b, expr: `(${a} × ${b})` },
+              ];
+
+              if (Math.abs(b) > EPSILON)
+                operations.push({ val: a / b, expr: `(${a} ÷ ${b})` });
+              if (Math.abs(a) > EPSILON)
+                operations.push({ val: b / a, expr: `(${b} ÷ ${a})` });
+
+              for (const op of operations) {
+                const result = dfsWithPath(
+                  [...rest, op.val],
+                  [...path, op.expr]
+                );
+                if (result) return result;
+              }
+            }
           }
           return null;
         }
 
-        const n = nums.length;
-        for (let i = 0; i < n; i++) {
-          for (let j = i + 1; j < n; j++) {
-            const a = nums[i];
-            const b = nums[j];
-            const rest = nums.filter((_, idx) => idx !== i && idx !== j);
-
-            const operations = [
-              { val: a + b, expr: `(${a} + ${b})` },
-              { val: a - b, expr: `(${a} - ${b})` },
-              { val: b - a, expr: `(${b} - ${a})` },
-              { val: a * b, expr: `(${a} × ${b})` }
-            ];
-
-            if (Math.abs(b) > EPSILON) operations.push({ val: a / b, expr: `(${a} ÷ ${b})` });
-            if (Math.abs(a) > EPSILON) operations.push({ val: b / a, expr: `(${b} ÷ ${a})` });
-
-            for (const op of operations) {
-              const result = dfsWithPath([...rest, op.val], [...path, op.expr]);
-              if (result) return result;
-            }
-          }
-        }
-        return null;
+        const solution = dfsWithPath(cards.map(Number), []);
+        return solution ? solution[solution.length - 1] : null;
       }
 
-      const solution = dfsWithPath(cards.map(Number), []);
-      return solution ? solution[solution.length - 1] : null;
-    }
+      function dealNewCards() {
+        expression = "";
+        usedCardIndices.clear();
 
-    function dealNewCards() {
-      expression = "";
-      usedCardIndices.clear();
+        let attempts = 0;
+        do {
+          currentCards = Array.from(
+            { length: 4 },
+            () => Math.floor(Math.random() * 9) + 1
+          );
+          attempts++;
 
-      let attempts = 0;
-      do {
-        currentCards = Array.from({ length: 4 }, () => Math.floor(Math.random() * 9) + 1);
-        attempts++;
-
-        if (attempts > 100) {
-          currentCards = [4, 1, 8, 7]; 
-          break;
-        }
-      } while (!judgePoint24(currentCards));
-
-      renderCards();
-      updateExpressionDisplay();
-    }
-
-    function shuffleCurrentCards() {
-      if (currentCards.length === 0) {
-        dealNewCards();
-        return;
-      }
-
-      const shuffled = [...currentCards];
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-
-      currentCards = shuffled;
-      expression = "";
-      usedCardIndices.clear();
-      renderCards();
-      updateExpressionDisplay();
-    }
-
-    function renderCards() {
-      cardsEl.innerHTML = "";
-      currentCards.forEach((n, i) => {
-        const btn = document.createElement("button");
-        btn.className = "card";
-        btn.textContent = n;
-        btn.dataset.value = n;
-        btn.dataset.index = i;
-        btn.setAttribute("data-testid", `card-${i}`);
-        btn.addEventListener("click", () => {
-          if (usedCardIndices.has(i)) return;
-
-          expression += n;
-          usedCardIndices.add(i);
-          updateExpressionDisplay();
-          btn.disabled = true;
-          addHistory(`Added number: ${n}`);
-        });
-        cardsEl.appendChild(btn);
-      });
-    }
-
-    function updateExpressionDisplay() {
-      const displayExpr = expression || "Start building an expression...";
-      exprEl.textContent = displayExpr;
-
-      if (!expression) {
-        resultEl.textContent = "= ?";
-        return;
-      }
-
-      try {
-
-        const jsExpr = expression
-          .replace(/×/g, '*')
-          .replace(/÷/g, '/')
-          .replace(/−/g, '-');
-
-        const val = eval(jsExpr);
-        if (isFinite(val)) {
-          resultEl.textContent = `= ${Number(val.toFixed(6))}`;
-        } else {
-          resultEl.textContent = "= Error";
-        }
-      } catch (e) {
-        resultEl.textContent = "= ?";
-      }
-    }
-
-    function clearExpression() {
-      expression = "";
-      usedCardIndices.clear();
-      updateExpressionDisplay();
-      document.querySelectorAll(".card").forEach(btn => {
-        btn.disabled = false;
-      });
-      addHistory("Expression cleared");
-    }
-
-    function undo() {
-      if (!expression) return;
-
-      const lastChar = expression.slice(-1);
-      expression = expression.slice(0, -1);
-
-      const lastNum = parseInt(lastChar, 10);
-      if (!isNaN(lastNum)) {
-
-        for (let i = currentCards.length - 1; i >= 0; i--) {
-          if (currentCards[i] === lastNum && usedCardIndices.has(i)) {
-            document.querySelector(`[data-index='${i}']`).disabled = false;
-            usedCardIndices.delete(i);
+          if (attempts > 100) {
+            currentCards = [4, 1, 8, 7];
             break;
           }
-        }
+        } while (!judgePoint24(currentCards));
+
+        renderCards();
+        updateExpressionDisplay();
       }
 
-      updateExpressionDisplay();
-      addHistory(`Undid: ${lastChar}`);
-    }
-
-    function addHistory(move) {
-      const li = document.createElement("li");
-      li.textContent = move;
-      li.setAttribute("data-testid", `history-item-${historyEl.children.length}`);
-
-      if (move.includes("= 24")) {
-        li.classList.add("success");
-      } else if (move.includes("Invalid") || move.includes("Error")) {
-        li.classList.add("error");
-      }
-
-      historyEl.appendChild(li);
-
-      historyEl.scrollTop = historyEl.scrollHeight;
-    }
-
-    function checkSolution() {
-      if (usedCardIndices.size !== 4) {
-        alert("You must use all four cards exactly once!");
-        return;
-      }
-
-      if (!expression.trim()) {
-        alert("Please build an expression first!");
-        return;
-      }
-
-      try {
-
-        const jsExpr = expression
-          .replace(/×/g, '*')
-          .replace(/÷/g, '/')
-          .replace(/−/g, '-');
-
-        const val = eval(jsExpr);
-
-        if (!isFinite(val)) {
-          resultEl.textContent = "= Error ❌";
-          addHistory(`${expression} = Error`);
+      function shuffleCurrentCards() {
+        if (currentCards.length === 0) {
+          dealNewCards();
           return;
         }
 
-        if (Math.abs(val - 24) < 1e-6) {
-          resultEl.textContent = "= 24 🎉";
-          resultEl.parentElement.classList.add("celebrate");
-          setTimeout(() => {
-            resultEl.parentElement.classList.remove("celebrate");
-          }, 500);
-          addHistory(`${expression} = 24 ✅`);
-        } else {
-          resultEl.textContent = `= ${Number(val.toFixed(6))} ❌`;
-          addHistory(`${expression} = ${Number(val.toFixed(6))}`);
+        const shuffled = [...currentCards];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
-      } catch (e) {
-        resultEl.textContent = "Invalid Expression ❌";
-        addHistory(`Invalid: ${expression}`);
-      }
-    }
 
-    function giveUp() {
-      const solvable = judgePoint24(currentCards);
-      if (solvable) {
-        const solution = findSolution(currentCards);
-        if (solution) {
-          alert(`This set IS solvable! \n\nHint: Try something like:\n${solution}`);
-        } else {
-          alert("This set IS solvable. Keep trying!");
+        currentCards = shuffled;
+        expression = "";
+        usedCardIndices.clear();
+        renderCards();
+        updateExpressionDisplay();
+      }
+
+      function renderCards() {
+        cardsEl.innerHTML = "";
+        currentCards.forEach((n, i) => {
+          const btn = document.createElement("button");
+          btn.className = "card";
+          btn.textContent = n;
+          btn.dataset.value = n;
+          btn.dataset.index = i;
+          btn.setAttribute("data-testid", `card-${i}`);
+          btn.addEventListener("click", () => {
+            if (usedCardIndices.has(i)) return;
+
+            expression += n;
+            usedCardIndices.add(i);
+            updateExpressionDisplay();
+            btn.disabled = true;
+            addHistory(`Added number: ${n}`);
+          });
+          cardsEl.appendChild(btn);
+        });
+      }
+
+      function updateExpressionDisplay() {
+        const displayExpr = expression || "Start building an expression...";
+        exprEl.textContent = displayExpr;
+
+        if (!expression) {
+          resultEl.textContent = "= ?";
+          return;
         }
-      } else {
-        alert("This set is NOT solvable. Dealing new cards...");
+
+        try {
+          const jsExpr = expression
+            .replace(/×/g, "*")
+            .replace(/÷/g, "/")
+            .replace(/−/g, "-");
+
+          const val = eval(jsExpr);
+          if (isFinite(val)) {
+            resultEl.textContent = `= ${Number(val.toFixed(6))}`;
+          } else {
+            resultEl.textContent = "= Error";
+          }
+        } catch (e) {
+          resultEl.textContent = "= ?";
+        }
+      }
+
+      function clearExpression() {
+        expression = "";
+        usedCardIndices.clear();
+        updateExpressionDisplay();
+        document.querySelectorAll(".card").forEach((btn) => {
+          btn.disabled = false;
+        });
+        addHistory("Expression cleared");
+      }
+
+      function undo() {
+        if (!expression) return;
+
+        const lastChar = expression.slice(-1);
+        expression = expression.slice(0, -1);
+
+        const lastNum = parseInt(lastChar, 10);
+        if (!isNaN(lastNum)) {
+          for (let i = currentCards.length - 1; i >= 0; i--) {
+            if (currentCards[i] === lastNum && usedCardIndices.has(i)) {
+              document.querySelector(`[data-index='${i}']`).disabled = false;
+              usedCardIndices.delete(i);
+              break;
+            }
+          }
+        }
+
+        updateExpressionDisplay();
+        addHistory(`Undid: ${lastChar}`);
+      }
+
+      function addHistory(move) {
+        const li = document.createElement("li");
+        li.textContent = move;
+        li.setAttribute(
+          "data-testid",
+          `history-item-${historyEl.children.length}`
+        );
+
+        if (move.includes("= 24")) {
+          li.classList.add("success");
+        } else if (move.includes("Invalid") || move.includes("Error")) {
+          li.classList.add("error");
+        }
+
+        historyEl.appendChild(li);
+
+        historyEl.scrollTop = historyEl.scrollHeight;
+      }
+
+      function checkSolution() {
+        if (usedCardIndices.size !== 4) {
+          alert("You must use all four cards exactly once!");
+          return;
+        }
+
+        if (!expression.trim()) {
+          alert("Please build an expression first!");
+          return;
+        }
+
+        try {
+          const jsExpr = expression
+            .replace(/×/g, "*")
+            .replace(/÷/g, "/")
+            .replace(/−/g, "-");
+
+          const val = eval(jsExpr);
+
+          if (!isFinite(val)) {
+            resultEl.textContent = "= Error ❌";
+            addHistory(`${expression} = Error`);
+            return;
+          }
+
+          if (Math.abs(val - 24) < 1e-6) {
+            resultEl.textContent = "= 24 🎉";
+            resultEl.parentElement.classList.add("celebrate");
+            setTimeout(() => {
+              resultEl.parentElement.classList.remove("celebrate");
+            }, 500);
+            addHistory(`${expression} = 24 ✅`);
+          } else {
+            resultEl.textContent = `= ${Number(val.toFixed(6))} ❌`;
+            addHistory(`${expression} = ${Number(val.toFixed(6))}`);
+          }
+        } catch (e) {
+          resultEl.textContent = "Invalid Expression ❌";
+          addHistory(`Invalid: ${expression}`);
+        }
+      }
+
+      function giveUp() {
+        const solvable = judgePoint24(currentCards);
+        if (solvable) {
+          const solution = findSolution(currentCards);
+          if (solution) {
+            alert(
+              `This set IS solvable! \n\nHint: Try something like:\n${solution}`
+            );
+          } else {
+            alert("This set IS solvable. Keep trying!");
+          }
+        } else {
+          alert("This set is NOT solvable. Dealing new cards...");
+          dealNewCards();
+        }
+      }
+
+      function init() {
+        cardsEl = document.getElementById("cards");
+        exprEl = document.getElementById("expression");
+        resultEl = document.getElementById("result");
+        historyEl = document.getElementById("history");
+
+        document.getElementById("btn-add").onclick = () => {
+          expression += "+";
+          updateExpressionDisplay();
+          addHistory("Added: +");
+        };
+        document.getElementById("btn-sub").onclick = () => {
+          expression += "−";
+          updateExpressionDisplay();
+          addHistory("Added: −");
+        };
+        document.getElementById("btn-mul").onclick = () => {
+          expression += "×";
+          updateExpressionDisplay();
+          addHistory("Added: ×");
+        };
+        document.getElementById("btn-div").onclick = () => {
+          expression += "÷";
+          updateExpressionDisplay();
+          addHistory("Added: ÷");
+        };
+        document.getElementById("btn-lp").onclick = () => {
+          expression += "(";
+          updateExpressionDisplay();
+          addHistory("Added: (");
+        };
+        document.getElementById("btn-rp").onclick = () => {
+          expression += ")";
+          updateExpressionDisplay();
+          addHistory("Added: )");
+        };
+
+        document.getElementById("btn-undo").onclick = undo;
+        document.getElementById("btn-clear").onclick = clearExpression;
+        document.getElementById("btn-check").onclick = checkSolution;
+        document.getElementById("btn-new").onclick = dealNewCards;
+        document.getElementById("btn-shuffle").onclick = shuffleCurrentCards;
+        document.getElementById("btn-giveup").onclick = giveUp;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        init();
         dealNewCards();
-      }
-    }
-
-    function init() {
-      cardsEl = document.getElementById("cards");
-      exprEl = document.getElementById("expression");
-      resultEl = document.getElementById("result");
-      historyEl = document.getElementById("history");
-
-      document.getElementById("btn-add").onclick = () => { 
-        expression += "+"; 
-        updateExpressionDisplay(); 
-        addHistory("Added: +");
-      };
-      document.getElementById("btn-sub").onclick = () => { 
-        expression += "−"; 
-        updateExpressionDisplay(); 
-        addHistory("Added: −");
-      };
-      document.getElementById("btn-mul").onclick = () => { 
-        expression += "×"; 
-        updateExpressionDisplay(); 
-        addHistory("Added: ×");
-      };
-      document.getElementById("btn-div").onclick = () => { 
-        expression += "÷"; 
-        updateExpressionDisplay(); 
-        addHistory("Added: ÷");
-      };
-      document.getElementById("btn-lp").onclick = () => { 
-        expression += "("; 
-        updateExpressionDisplay(); 
-        addHistory("Added: (");
-      };
-      document.getElementById("btn-rp").onclick = () => { 
-        expression += ")"; 
-        updateExpressionDisplay(); 
-        addHistory("Added: )");
-      };
-
-      document.getElementById("btn-undo").onclick = undo;
-      document.getElementById("btn-clear").onclick = clearExpression;
-      document.getElementById("btn-check").onclick = checkSolution;
-      document.getElementById("btn-new").onclick = dealNewCards;
-      document.getElementById("btn-shuffle").onclick = shuffleCurrentCards;
-      document.getElementById("btn-giveup").onclick = giveUp;
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      init();
-      dealNewCards();
-      addHistory("Welcome to 24 Game! Build an expression that equals 24.");
-    });
-  </script>
-</body>
+        addHistory("Welcome to 24 Game! Build an expression that equals 24.");
+      });
+    </script>
+  </body>
 </html>

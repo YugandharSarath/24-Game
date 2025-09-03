@@ -37,16 +37,19 @@ body {
 }
 
 .cards {
-  display: inline-block;
+  display: grid;
   margin: 5px;
   padding: 10px 15px;
   font-size: 1.2rem;
   font-weight: bold;
-  background-color: #1E90FF;
+  background-color: #1e90ff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  grid-template-columns: repeat(4, minmax(60px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
 }
 
 .cards .card {
@@ -119,11 +122,13 @@ body {
   background: #388e3c;
 }
 
-#btn-new, #btn-shuffle {
+#btn-new,
+#btn-shuffle {
   background: #2196f3;
   color: white;
 }
-#btn-new:hover, #btn-shuffle:hover {
+#btn-new:hover,
+#btn-shuffle:hover {
   background: #1976d2;
 }
 
