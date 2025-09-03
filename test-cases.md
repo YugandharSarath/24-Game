@@ -1,106 +1,115 @@
 
 ---
 
-## ✅ UNO Game – Test Cases (Sentence Format)
+### 🔎 Test Case Breakdown
 
-### TC-001: Game starts correctly
+```js
+test("Example 1: [4,1,8,7] => true", () => {
+  expect(judgePoint24([4, 1, 8, 7])).toBe(true);
+});
+```
 
-When the game is loaded, it should initialize the game board by displaying the player and opponent hands with 7 cards each. The discard pile should begin with a valid number card (not a wild or action card).
+✅ **Explanation:**
 
----
-
-### TC-002: Player can play a card that matches the color
-
-If the player selects a card that matches the color of the top card in the discard pile, the card should be played successfully, and the turn should end.
-
----
-
-### TC-003: Player can play a card that matches the value
-
-If the player selects a card that matches the number or symbol (e.g., 7, Reverse) of the top card in the discard pile, the card should be played, and the turn should end.
+* This is the classic example from LeetCode.
+* Valid solution: **(8 - 4) \* (7 - 1) = 24**
+* Confirms solver returns `true` for a solvable set.
 
 ---
 
-### TC-004: Player cannot play an invalid card
+```js
+test("Example 2: [1,2,1,2] => false", () => {
+  expect(judgePoint24([1, 2, 1, 2])).toBe(false);
+});
+```
 
-If the player tries to play a card that does not match the color or value of the top card and is not a wild card, the game should reject the move, show a warning, and keep the card in the player’s hand without ending the turn.
+❌ **Explanation:**
 
----
-
-### TC-005: Player draws a card and cannot play it
-
-If the player has no playable cards and clicks the draw deck, one card should be added to their hand. If that card is also unplayable, the player’s turn should end automatically.
-
----
-
-### TC-006: Player draws a card and can play it
-
-If the player draws a card and it is valid (i.e., matches color or value), they should be allowed to play it immediately during the same turn.
+* There’s no way to reach 24 with two 1’s and two 2’s.
+* Confirms solver correctly detects **unsolvable** sets.
 
 ---
 
-### TC-007: Player plays a Skip card
+```js
+test("Extra: [3,3,8,8] => true", () => {
+  expect(judgePoint24([3, 3, 8, 8])).toBe(true);
+});
+```
 
-When the player plays a "Skip" card, the opponent’s turn should be skipped, and the player should retain control in the next round of play.
+✅ **Explanation:**
 
----
-
-### TC-008: Player plays a Reverse card
-
-When a "Reverse" card is played, the direction of play should change immediately. In a two-player game, this effectively works like a Skip.
-
----
-
-### TC-009: Player plays a Draw Two card
-
-When the player plays a "Draw Two" card, the opponent must draw two cards and lose their turn. The player's turn resumes afterward.
+* Requires using division cleverly.
+* One valid solution:
+  `8 / (3 - 8/3) = 24`
+* Good for testing **floating-point precision** and division handling.
 
 ---
 
-### TC-010: Player plays a Wild card
+```js
+test("Extra: [7,7,3,3] => true", () => {
+  expect(judgePoint24([7, 7, 3, 3])).toBe(true);
+});
+```
 
-When a "Wild" card is played, the game should prompt the player with a color picker modal to select the next active color before continuing the game.
+✅ **Explanation:**
 
----
+* Multiple solutions possible, one is:
+  `(7 - 3) * (7 - 3) = 16` (not enough)
+  But a valid solution is:
+  `(7 * 3) + (7 + 3) = 21 + 10 = 31 ❌` (not 24)
+  → Wait, let's verify this one carefully.
 
-### TC-011: Player plays a Wild Draw Four card
+Actually, this is a good candidate to double-check — because not every pair of \[7,7,3,3] combinations yield 24.
 
-If the player plays a "Wild Draw Four" card, a color picker should appear allowing the player to choose a new color. The opponent should draw four cards and their turn should be skipped.
+Let's quickly analyze:
 
----
+* 7 + 7 = 14, 3 + 3 = 6 → 14 + 6 = 20 ❌
+* 14 - 6 = 8 ❌
+* 14 \* 6 = 84 ❌
+* 14 / 6 = 2.33 ❌
 
-### TC-012: Player wins the game
+Another try:
 
-When the player plays their final card, the game should display a message: “Player wins the game!” and show a "Play Again" button. No further turns should be processed.
+* 7 - 3 = 4, other 7 - 3 = 4 → 4 \* 4 = 16 ❌
+* 4 + 4 = 8 ❌
+* 4 / 4 = 1 ❌
 
----
-
-### TC-013: Opponent wins the game
-
-If the opponent plays their last card, the game should show the message: “Opponent wins the game!” and a "Play Again" button should appear. Game logic should stop.
-
----
-
-### TC-014: Player wins with a Wild card
-
-If the player's final card is a Wild or Wild Draw Four card, the game should prompt them to select a color, then declare the win and end the game once that is done.
-
----
-
-### TC-015: Player calls UNO correctly
-
-When the player plays down to two cards, the "UNO!" button should become active. If the player clicks it before playing their second-last card, a message should confirm: “You called UNO!” and the button should be disabled.
+It seems `[7,7,3,3]` **might actually be unsolvable** — meaning this test might **fail** with your solver.
+We can run `judgePoint24([7, 7, 3, 3])` in Node to confirm.
 
 ---
 
-### TC-016: Player fails to call UNO
+```js
+test("Extra: [1,1,1,1] => false", () => {
+  expect(judgePoint24([1, 1, 1, 1])).toBe(false);
+});
+```
 
-If the player plays a second-last card but does not click the "UNO!" button beforehand, the game should show a message like: “You must call UNO!” and prevent the move or apply a penalty (to be implemented).
+❌ **Explanation:**
+
+* Obvious edge case — sum of all numbers is 4, can never get to 24.
 
 ---
 
-### TC-017: Draw deck runs out
+### Summary Table
 
-If the draw pile is completely exhausted during gameplay, the discard pile (except the topmost card) should be shuffled and used to recreate the draw deck. The game should continue smoothly.
+| Test Case   | Expected        | Valid Solution / Reason      |
+| ----------- | --------------- | ---------------------------- |
+| `[4,1,8,7]` | ✅ true          | `(8 - 4) * (7 - 1) = 24`     |
+| `[1,2,1,2]` | ❌ false         | No solution possible         |
+| `[3,3,8,8]` | ✅ true          | `8 / (3 - 8/3) = 24`         |
+| `[7,7,3,3]` | ❓ (Needs check) | Might actually be unsolvable |
+| `[1,1,1,1]` | ❌ false         | Cannot reach 24              |
 
 ---
+
+✅ Your tests are **good coverage** for:
+
+* Basic solvable case
+* Basic unsolvable case
+* Floating-point division
+* Duplicate numbers
+* Edge case with all 1’s
+
+⚠️ **Action point:** `[7,7,3,3]` may actually be unsolvable.
+Would you like me to quickly run through the solution search for `[7,7,3,3]` and confirm (so we know if your test should expect `true` or `false`)?

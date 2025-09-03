@@ -1,13 +1,22 @@
-import React from "react";
-import UNO from "./uno";
-import "./uno.css";
+import React, { useEffect } from "react";
+import { init, dealNewCards } from "./twentyFourGame";
+import "./styles.css";
 
 function App() {
+  useEffect(() => {
+    init();
+    dealNewCards();
+  }, []);
+
   return (
-    <div className="App">
-      <h1>UNO</h1>
-      <UNO />
-    </div>
+    <main className="app">
+      <div id="cards"></div>
+      <div>
+        <span id="expression"></span>
+        <span id="result"></span>
+      </div>
+      <ul id="history"></ul>
+    </main>
   );
 }
 

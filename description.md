@@ -1,109 +1,40 @@
+### 🧮 **24 Game**
 
-# 🃏 UNO Game – Requirements & Test Cases
+### 1. Requirements
 
----
+**Functional Requirements:**
 
-## ✅ Core Requirements
+* The game should deal **4 random numbers (1–9)** on each new round.
+* Players must use **all 4 numbers exactly once** to form an expression that evaluates to 24.
+* Players can click numbers and operators (`+`, `−`, `×`, `÷`, `(`, `)`) to build an expression.
+* The current expression and its live evaluation should be displayed.
+* A **"Check"** button must validate if the expression equals 24 (✅ or ❌ feedback).
+* A **"Clear"** button resets the current expression without dealing new numbers.
+* A **"Undo"** button removes the last character/operator/number entered.
+* A **"New Deal"** button generates a new set of numbers.
+* A **"Shuffle"** button reorders the current 4 numbers randomly.
+* A **"Give Up"** button checks if the current set is solvable:
+  * If solvable → prompts user to try again.
+  * If unsolvable → deals a new set automatically.
+* A move history should log previous attempts (e.g., `3+8+8+5 = 24 ✅`).
+* Optionally, a **"Hint"** button can show a small tip (like pairing largest/smallest numbers).
 
-### 1. **Game Initialization**
-* Start with a shuffled deck of 108 UNO cards.
-* Deal **7 cards** to the player and the opponent.
-* Discard pile begins with **one non-action, non-wild card**.
+### 2. Edge Cases & Constraints
 
-### 2. **Gameplay Mechanics**
-* Players can play a card if it matches the **color, number, or symbol** of the top discard card.
-* **Wild cards** are playable at any time.
+* Users **must** use all four numbers exactly once — partial solutions are invalid.
+* Clicking a number twice should not be allowed (button is disabled after first use).
+* Invalid mathematical expressions should show `Invalid Expression ❌` instead of crashing.
+* Division by zero must be handled gracefully (skip or ignore invalid divisions in solver).
+* The game must reset all buttons to enabled state when a new deal is generated.
+* Undo must properly re-enable a card button if the last input was a number.
+* Move history should persist across new deals (optional) but can be cleared on reset.
+* Game should work on desktop and mobile (responsive layout).
 
-### 3. **Action Cards**
-* **Skip**: Skips the next player's turn.
-* **Reverse**: Reverses play direction.
-* **Draw Two**: Next player draws two cards and skips their turn.
-* **Wild**: Lets the player choose the next color.
-* **Wild Draw Four**: Opponent draws four cards and skips turn. Can only be played if no playable cards are available.
+### 3. Testing Identifiers (`data-testid`)
 
-### 4. **Drawing Cards**
-* If no playable card is available, draw a card from the deck.
-* If playable, the drawn card may be played immediately. Otherwise, the turn ends.
+The following elements use `data-testid` for automated testing:
 
-### 5. **UNO! Call**
-* When a player has **2 cards**, they must click **"UNO!"**.
-* If they fail, a penalty (to be implemented) is applied.
-
-### 6. **Winning**
-* The player who plays all their cards first wins.
-* A winning message and **"Play Again"** button are shown.
-
-### 7. **User Interface**
-* Player's cards are visible; opponent's cards are hidden (face down).
-* Display discard pile and draw deck.
-* Message log shows game status.
-* "UNO!" button appears when the player has 2 cards.
-
----
-
-## ⚠️ Edge Cases & Constraints
-
-* **Empty Deck**: When draw deck is empty, shuffle discard pile (excluding top card) to refill it.
-* **Starting Card**: Must be a valid non-action, non-wild number card.
-* **Wild Play**: On wild card use, prompt player to pick a color before continuing.
-* **Invalid Moves**: Disallowed via UI and game logic.
-* **Game Over**: Turn-based actions stop. Show winner and restart option.
-* **UNO Button Visibility**: Enabled only when 2 cards remain; disabled once pressed.
-
----
-
-## 🧪 Data-TestId Implementation
-
-The UNO game includes comprehensive `data-testid` attributes for automated testing:
-
-### **Card Elements**
-- `data-testid="player-card-${index}"` - Individual player cards (index 0-based)
-- `data-testid="opponent-card-${index}"` - Individual opponent cards (index 0-based)
-- `data-testid="discard-top-card"` - Top card of the discard pile
-
-### **UI Controls**
-- `data-testid="restart-button"` - Play Again button (appears after game ends)
-
-### **Additional Data Attributes**
-Cards also include:
-- `data-color` - The card's color (red, green, blue, yellow, wild)
-- `data-value` - The card's value (0-9, skip, reverse, draw2, wild, wildDraw4)
-
----
-
-## 🔍 Test Coverage Areas
-
-### **Unit Tests**
-1. **Deck Creation**: Validates 108-card deck with correct distribution
-2. **Card Shuffling**: Ensures randomization without losing cards
-3. **Playability Logic**: Tests all card matching scenarios
-4. **Action Cards**: Verifies skip, reverse, draw2, and wild card effects
-5. **UNO Button**: Tests enable/disable states based on hand size
-
-### **Integration Tests**
-1. **Game Flow**: Complete turn sequences and state transitions
-2. **Edge Cases**: Empty deck reshuffling, invalid moves
-3. **Win Conditions**: Player and opponent victory scenarios
-
-### **DOM Tests**
-1. **Test ID Validation**: Ensures all interactive elements have proper test IDs
-2. **Element Rendering**: Verifies correct HTML structure and attributes
-3. **Event Handling**: Tests click events and user interactions
-
-### **Performance Tests**
-1. **Deck Operations**: Ensures fast creation and shuffling
-2. **Game State Updates**: Validates efficient rendering cycles
-
----
-
-## 📊 Deck Composition Details
-
-- **Total Cards**: 108
-- **Numbered Cards**: 76 (19 per color: one 0, two each 1-9)
-- **Action Cards**: 24 (2 each of skip/reverse/draw2 per color)
-- **Wild Cards**: 8 (4 wild, 4 wild draw four)
-- **Colors**: 4 (red, green, blue, yellow) + wild
-
----
-
-
+* **Cards:** `card-0`, `card-1`, `card-2`, `card-3`
+* **Buttons:** `btn-add`, `btn-sub`, `btn-mul`, `btn-div`, `btn-lp`, `btn-rp`, `btn-undo`, `btn-clear`, `btn-check`, `btn-new`, `btn-shuffle`, `btn-giveup`
+* **Displays:** `expression-display`, `result`
+* **Containers:** `cards-container`, `history-container`
